@@ -1,6 +1,6 @@
 
 import './App.css';
-import BoardContainer from './BoardColumn';
+import BoardContainer from './Component/BoardColumn';
 import "@lourenci/react-kanban/dist/styles.css";
 
 function App() {

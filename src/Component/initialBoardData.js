@@ -1,7 +1,6 @@
-// initialBoardData.js
 const initialBoardKey = "taskBoard";
 
-export { initialBoardKey }; // Export initialBoardKey separately
+export { initialBoardKey };
 
 export const getInitialBoard = () => {
   return (

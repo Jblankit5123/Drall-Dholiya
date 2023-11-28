@@ -1,6 +1,6 @@
 // Modal component
 import React, { useContext } from "react";
-import { ModalContext } from "./UncontrolledBoard";
+import { ModalContext } from "../Component/UncontrolledBoard";
 
 const Modal = ({ visible }) => {
     const { editedCard, handleFieldChange, handleSaveChanges, handleModalClose } = useContext(ModalContext);

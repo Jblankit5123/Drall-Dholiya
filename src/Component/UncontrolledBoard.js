@@ -1,9 +1,9 @@
 import React, { useState, useEffect, createContext } from "react";
 import Board from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import SearchInput from "./SearchInput";
 import { getInitialBoard, initialBoardKey } from "./initialBoardData";
 import Modal from "./Modal";
@@ -89,7 +89,7 @@ function UncontrolledBoard() {
                         }
 
                         return (
-                            <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px' }}>
+                            <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px',width:'350px' }}>
                                 <p style={{ textAlign: 'right' }}>
                                     <span><button onClick={() => handleEditClick(card.id)}>Update</button></span>
                                     <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>

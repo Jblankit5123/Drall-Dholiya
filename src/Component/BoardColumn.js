@@ -1,6 +1,5 @@
-// BoardContainer.js
 import React from "react";
-import UncontrolledBoard from "./UncontrolledBoard";
+import UncontrolledBoard from "../Component/UncontrolledBoard";
 
 function BoardContainer({ type }) {
     return (
