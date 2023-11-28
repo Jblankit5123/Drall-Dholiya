@@ -8,8 +8,8 @@ const TaskDescription = () => {
         <>
             <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px', width: '350px' }}>
                 <p style={{ textAlign: 'right' }}>
-                    <span><button onClick={() => handleEditClick(card.id)}>Update</button></span>
-                    <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
+                    <span><button onClick={() => handleEditClick(card.id)}>Edit</button></span>
+                    <span> <button onClick={() => removeCard(card.id)}>Delete</button></span></p>
                 <p>
                     <b>Title: </b>{card.title}
                 </p>
