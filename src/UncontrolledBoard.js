@@ -4,72 +4,17 @@ import "@lourenci/react-kanban/dist/styles.css";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchInput from "./SearchInput";
+import { getInitialBoard, initialBoardKey } from "./initialBoardData";
+import Modal from "./Modal";
 
-
-const initialBoardKey = "taskBoard";
-const initialBoard = JSON.parse(localStorage.getItem(initialBoardKey)) || {
-    columns: [
-        {
-            id: 1,
-            title: "To do",
-            backgroundColor: "#fff",
-            cards: [
-                {
-                    id: 1,
-                    title: "Card title 1",
-                    description: "users to create, update, and delete",
-                    date: "25/11/2023",
-                    assignee: 'kamal',
-                },
-                {
-                    id: 2,
-                    title: "Card title 2",
-                    description: "users to create, update, and delete",
-                    date: "25/11/2023",
-                    assignee: 'Swapnil'
-                }
-            ],
-        },
-        {
-            id: 2,
-            title: "In progress",
-            cards: [
-                {
-                    id: 9,
-                    title: "Card title 9",
-                    description: "users to create, update, and delete",
-                    date: "25/11/2023",
-                    assignee: 'Ankit',
-                },
-            ],
-        },
-        {
-            id: 3,
-            title: "Done",
-            cards: [
-                {
-                    id: 10,
-                    title: "Card title 6",
-                    description: "users to create, update, and delete",
-                    date: "25/11/2023",
-                    assignee: 'Anupam'
-                },
-                {
-                    id: 3,
-                    title: "Card title 3",
-                    description: "users to create, update, and delete",
-                    date: "25/11/2023",
-                    assignee: 'Dev',
-                },
-            ],
-        },
-    ],
-};
+const initialBoard = getInitialBoard();
 
 function UncontrolledBoard() {
     const [board, setBoard] = useState(initialBoard);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [editedCard, setEditedCard] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         localStorage.setItem(initialBoardKey, JSON.stringify(board));
@@ -105,14 +50,23 @@ function UncontrolledBoard() {
         handleModalClose();
     };
 
+    const handleCardRemove = () => {
+        toast.success(`Task removed successfully`);
+    }
+
+    const onCardNew = () => {
+        toast.success(`Task added successfully`);
+    }
+
     return (
         <>
+            <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             <Board
                 allowRemoveLane
                 allowRenameColumn
                 allowRemoveCard
                 onLaneRemove={console.log}
-                onCardRemove={console.log}
+                onCardRemove={handleCardRemove}
                 onLaneRename={console.log}
                 initialBoard={board}
                 allowAddCard={{ on: "top" }}
@@ -120,57 +74,39 @@ function UncontrolledBoard() {
                     id: new Date().getTime(),
                     ...draftCard,
                 })}
-                onCardNew={console.log}
-                renderCard={(card, { removeCard, dragging }) => (
-                    <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px' }}>
-                        <p style={{ textAlign: 'right' }}><span><button onClick={() => handleEditClick(card.id)}>Edit</button></span>
-                            <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
-                        <p>
-                            <b>Title: </b>{card.title}
+                onCardNew={onCardNew}
+                renderCard={(card, { removeCard, dragging }) => {
+                    const matchesSearch = card.assignee.toLowerCase().includes(searchQuery.toLowerCase())
+                        || card.title.toLowerCase().includes(searchQuery.toLowerCase()) || card.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-                        </p>
-                        <p><b>Description: </b>{card.description}</p>
-                        <p><b>Date: </b>{card.date}</p>
-                        <p><b>Assignee: </b>{card.assignee}</p>
-                    </div>
-                )}
+                    if (!matchesSearch) {
+                        return null;
+                    }
+
+                    return (
+                        <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px' }}>
+                            <p style={{ textAlign: 'right' }}><span><button onClick={() => handleEditClick(card.id)}>Edit</button></span>
+                                <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
+                            <p>
+                                <b>Title: </b>{card.title}
+
+                            </p>
+                            <p><b>Description: </b>{card.description}</p>
+                            <p><b>Date: </b>{card.date}</p>
+                            <p><b>Assignee: </b>{card.assignee}</p>
+                        </div>
+                    );
+                }}
             />
             <ToastContainer />
             {editModalVisible && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={handleModalClose}>&times;</span>
-                        <p style={{ textAlign: 'center', fontWeight: 'bold' }}>Edit Card</p>
-                        <label>Title</label>
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={editedCard.title}
-                            onChange={(e) => handleFieldChange('title', e.target.value)}
-                        />
-                        <label>Description</label>
-                        <textarea
-                            placeholder="Description"
-                            value={editedCard.description}
-                            onChange={(e) => handleFieldChange('description', e.target.value)}
-                        />
-                        <label>Date</label>
-                        <input
-                            type="text"
-                            placeholder="Date"
-                            value={editedCard.date}
-                            onChange={(e) => handleFieldChange('date', e.target.value)}
-                        />
-                        <label>Assignee</label>
-                        <input
-                            type="text"
-                            placeholder="Assignee"
-                            value={editedCard.assignee}
-                            onChange={(e) => handleFieldChange('assignee', e.target.value)}
-                        />
-                        <button onClick={handleSaveChanges}>Save Changes</button>
-                    </div>
-                </div>
+                <Modal
+                    visible={editModalVisible}
+                    onClose={handleModalClose}
+                    editedCard={editedCard}
+                    onFieldChange={handleFieldChange}
+                    onSaveChanges={handleSaveChanges}
+                />
             )}
         </>
 

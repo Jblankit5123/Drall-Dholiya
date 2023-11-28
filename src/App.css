@@ -32,6 +32,7 @@
     text-decoration: none;
     cursor: pointer;
 }
+
 .modal-content input,
 .modal-content textarea {
     display: block;
@@ -39,4 +40,14 @@
     margin-bottom: 10px;
     padding: 8px;
     box-sizing: border-box;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+}
+
+.search input {
+    padding: 5px 2px;
+    width: 25%;
 }
