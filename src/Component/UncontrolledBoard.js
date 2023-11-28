@@ -7,9 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import SearchInput from "./SearchInput";
 import { getInitialBoard, initialBoardKey } from "./initialBoardData";
 import Modal from "./Modal";
+import TaskDescription from "./Description";
 
 const initialBoard = getInitialBoard();
 export const ModalContext = createContext();
+export const TaskDescriptionContext = createContext();
 
 function UncontrolledBoard() {
     const [board, setBoard] = useState(initialBoard);
@@ -62,6 +64,7 @@ function UncontrolledBoard() {
     return (
         <>
             <ModalContext.Provider value={{ editedCard, handleFieldChange, handleSaveChanges, handleModalClose }}>
+
                 <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                 <Board
                     allowRemoveLane
@@ -89,18 +92,9 @@ function UncontrolledBoard() {
                         }
 
                         return (
-                            <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px',width:'350px' }}>
-                                <p style={{ textAlign: 'right' }}>
-                                    <span><button onClick={() => handleEditClick(card.id)}>Update</button></span>
-                                    <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
-                                <p>
-                                    <b>Title: </b>{card.title}
-
-                                </p>
-                                <p><b>Description: </b>{card.description}</p>
-                                <p><b>Date: </b>{card.date}</p>
-                                <p><b>Assignee: </b>{card.assignee}</p>
-                            </div>
+                            <TaskDescriptionContext.Provider value={{ card, handleEditClick, removeCard }}>
+                                <TaskDescription />
+                            </TaskDescriptionContext.Provider>
                         );
                     }}
                 />
