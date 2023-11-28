@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Drall-Dholiya/static/css/main.bfd1c60b.css",
-    "main.js": "/Drall-Dholiya/static/js/main.f276cff0.js",
+    "main.js": "/Drall-Dholiya/static/js/main.d29a7653.js",
     "static/js/787.d4aba7ab.chunk.js": "/Drall-Dholiya/static/js/787.d4aba7ab.chunk.js",
     "index.html": "/Drall-Dholiya/index.html",
     "main.bfd1c60b.css.map": "/Drall-Dholiya/static/css/main.bfd1c60b.css.map",
-    "main.f276cff0.js.map": "/Drall-Dholiya/static/js/main.f276cff0.js.map",
+    "main.d29a7653.js.map": "/Drall-Dholiya/static/js/main.d29a7653.js.map",
     "787.d4aba7ab.chunk.js.map": "/Drall-Dholiya/static/js/787.d4aba7ab.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bfd1c60b.css",
-    "static/js/main.f276cff0.js"
+    "static/js/main.d29a7653.js"
   ]
 }
