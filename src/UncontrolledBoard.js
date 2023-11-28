@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import Board from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
 
@@ -9,6 +9,7 @@ import { getInitialBoard, initialBoardKey } from "./initialBoardData";
 import Modal from "./Modal";
 
 const initialBoard = getInitialBoard();
+export const ModalContext = createContext();
 
 function UncontrolledBoard() {
     const [board, setBoard] = useState(initialBoard);
@@ -60,54 +61,56 @@ function UncontrolledBoard() {
 
     return (
         <>
-            <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            <Board
-                allowRemoveLane
-                allowRenameColumn
-                allowRemoveCard
-                onLaneRemove={console.log}
-                onCardRemove={handleCardRemove}
-                onLaneRename={console.log}
-                initialBoard={board}
-                allowAddCard={{ on: "top" }}
-                onNewCardConfirm={(draftCard) => ({
-                    id: new Date().getTime(),
-                    ...draftCard,
-                })}
-                onCardNew={onCardNew}
-                renderCard={(card, { removeCard, dragging }) => {
-                    const matchesSearch = card.assignee.toLowerCase().includes(searchQuery.toLowerCase())
-                        || card.title.toLowerCase().includes(searchQuery.toLowerCase()) || card.description.toLowerCase().includes(searchQuery.toLowerCase());
+            <ModalContext.Provider value={{ editedCard, handleFieldChange, handleSaveChanges, handleModalClose }}>
+                <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <Board
+                    allowRemoveLane
+                    allowRenameColumn
+                    allowRemoveCard
+                    onLaneRemove={console.log}
+                    onCardRemove={handleCardRemove}
+                    onLaneRename={console.log}
+                    initialBoard={board}
+                    allowAddCard={{ on: "top" }}
+                    onNewCardConfirm={(draftCard) => ({
+                        id: new Date().getTime(),
+                        ...draftCard,
+                    })}
+                    onCardNew={onCardNew}
+                    renderCard={(card, { removeCard }) => {
+                        const assignee = card.assignee || "";
+                        const description = card.description || "";
+                        const title = card.title || "";
+                        const matchesSearch = assignee.toLowerCase().includes(searchQuery.toLowerCase())
+                            || title.toLowerCase().includes(searchQuery.toLowerCase()) || description.toLowerCase().includes(searchQuery.toLowerCase());
 
-                    if (!matchesSearch) {
-                        return null;
-                    }
+                        if (!matchesSearch) {
+                            return null;
+                        }
 
-                    return (
-                        <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px' }}>
-                            <p style={{ textAlign: 'right' }}><span><button onClick={() => handleEditClick(card.id)}>Edit</button></span>
-                                <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
-                            <p>
-                                <b>Title: </b>{card.title}
+                        return (
+                            <div style={{ backgroundColor: "#fff", padding: "10px", margin: '5px' }}>
+                                <p style={{ textAlign: 'right' }}>
+                                    <span><button onClick={() => handleEditClick(card.id)}>Update</button></span>
+                                    <span> <button onClick={() => removeCard(card.id)}>x</button></span></p>
+                                <p>
+                                    <b>Title: </b>{card.title}
 
-                            </p>
-                            <p><b>Description: </b>{card.description}</p>
-                            <p><b>Date: </b>{card.date}</p>
-                            <p><b>Assignee: </b>{card.assignee}</p>
-                        </div>
-                    );
-                }}
-            />
-            <ToastContainer />
-            {editModalVisible && (
-                <Modal
-                    visible={editModalVisible}
-                    onClose={handleModalClose}
-                    editedCard={editedCard}
-                    onFieldChange={handleFieldChange}
-                    onSaveChanges={handleSaveChanges}
+                                </p>
+                                <p><b>Description: </b>{card.description}</p>
+                                <p><b>Date: </b>{card.date}</p>
+                                <p><b>Assignee: </b>{card.assignee}</p>
+                            </div>
+                        );
+                    }}
                 />
-            )}
+
+                <ToastContainer />
+                {editModalVisible && (
+                    <Modal visible={editModalVisible} />
+                )}
+
+            </ModalContext.Provider>
         </>
 
     );
